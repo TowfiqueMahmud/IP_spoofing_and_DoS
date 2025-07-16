@@ -1,0 +1,4 @@
+List of classes:
+    1. NetworkDevice -> devices located in the lan
+    2. Attacker -> inherits network device
+    3. Packet -> structure of an IP packet
