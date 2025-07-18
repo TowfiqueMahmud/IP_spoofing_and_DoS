@@ -1,4 +1,17 @@
-List of classes:
+List of classes and methods:
     1. NetworkDevice -> devices located in the lan
-    2. Attacker -> inherits network device
+        *a. packet_build() -> builds the packet
+        *b. send_packet() -> sends the packet
+        *c. receive_packet() -> receives and sends response if necessary
+        d. accept_connection() -> for DoS attack probably
+        e. reset_connection() -> for DoS attack probably
+
+    2. AttackerDevice -> inherits network device
+        *a. receive_packet_for_spoofing() -> receives all the ARP packets
+        *b. spoofed_packet_build() -> builds packet for spoofing
+
     3. Packet -> structure of an IP packet
+
+
+
+* marked methods are discouraged to modify

@@ -1,0 +1,22 @@
+First give the number of device needed in LAN. All the machine will get their
+IP and MAC address. After that you can start giving command to the console.
+
+Guide of IP spoofing attack:
+============================================================================
+1.  change-ip <ip-address>                  # To get to the console of
+                                            # desired device
+    change-ip lan                           # To get back to LAN
+
+2.  show                                    # To view device stat
+                                            # (not for using in LAN)
+    show all                                # To view all the devices'
+                                            # stat (only for LAN)
+    show <ip-address>                       # To view a specific device's
+                                            # stat (only for LAN)
+
+3.  send arp <ip-address>                   # To broadcast an ARP request
+    send normal <ip-address> <payload>      # To send a normal packet
+
+4.  receive                                 # To receive the top packet
+                                            # from the queue
+5.  spoof <fake-src-ip> <dest-ip>           # To spoof the identity
