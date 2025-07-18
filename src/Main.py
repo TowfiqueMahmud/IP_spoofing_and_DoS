@@ -30,82 +30,80 @@ def print_all_devices(net:Network):
     for d in net.devices:
         d.print_device_details()
 
+if __name__ == "__main__":
+    count = int(input("Enter the number of device: "))
+    test_lan = Network(count)
+    userIP = "lan"
+    current = None
+    while (True):
+        command = input(userIP + ":~$ ")
+        args = command.split(" ")
+
+        if args[0] == "show":
+            if userIP == "lan":
+                if len(args) != 2:
+                    print("Invalid command")
+
+                else:
+                    if args[1] == "all":
+                        print_all_devices(test_lan)
+                    else:
+                        if test_lan.get_device_by_ip(args[1]):
+                            test_lan.get_device_by_ip(args[1]).print_device_details()
+                        else:
+                            print("No such device found")
 
 
-count = int(input("Enter the number of device: "))
-test_lan = Network(count)
-userIP = "lan"
-current = None
+            else:
+                if len(args) == 1:
+                    current.print_device_details()
+                else:
+                    print("Invalid command")
 
-while(True):
-    command = input(userIP + ":~$ ")
-    args = command.split(" ")
-
-    if args[0] == "show":
-        if userIP == "lan":
+        elif args[0] == "change-ip":
             if len(args) != 2:
                 print("Invalid command")
-
             else:
-                if args[1] == "all":
-                    print_all_devices(test_lan)
+                if args[1] == "lan":
+                    userIP = "lan"
+                    current = None
+                elif test_lan.get_device_by_ip(args[1]):
+                    current = test_lan.get_device_by_ip(args[1])
+                    userIP = args[1]
                 else:
-                    if test_lan.get_device_by_ip(args[1]):
-                        test_lan.get_device_by_ip(args[1]).print_device_details()
+                    print("No such device found")
+
+        elif args[0] == "send":
+            if args[1] == "arp":
+                destination = test_lan.get_device_by_ip(args[2])
+                if destination:
+                    packet = current.packet_build(args[2], "ARP req", "This is an ARP request")
+                    current.send_packet(packet)
+
+            elif args[1] == "normal":
+                destination = test_lan.get_device_by_ip(args[2])
+                if destination:
+                    packet = current.packet_build(args[2], "Normal packet", args[3])
+                    if packet:
+                        current.send_packet(packet)
                     else:
-                        print("No such device found")
+                        print("Unable to build packet")
 
-
-        else:
-            if len(args) == 1:
-                current.print_device_details()
+        elif args[0] == "receive":
+            if len(args) > 1:
+                print("Invalid command")
             else:
+                current.receive_packet()
+
+
+        elif args[0] == "spoof":
+            if not isinstance(current, AttackerDevice):
                 print("Invalid command")
 
-    elif args[0] == "change-ip":
-        if len(args) != 2:
-            print("Invalid command")
-        else:
-            if args[1] == "lan":
-                userIP = "lan"
-                current = None
-            elif test_lan.get_device_by_ip(args[1]):
-                current = test_lan.get_device_by_ip(args[1])
-                userIP = args[1]
             else:
-                print("No such device found")
-
-    elif args[0] == "send":
-        if args[1] == "arp":
-            destination = test_lan.get_device_by_ip(args[2])
-            if destination:
-                packet = current.packet_build(args[2], "ARP req", "This is an ARP request")
+                packet = current.spoofed_packet_build(args[1], args[2],
+                                                      test_lan.get_device_by_ip(args[2]), "Attacking you haha")
                 current.send_packet(packet)
 
-        elif args[1] == "normal":
-            destination = test_lan.get_device_by_ip(args[2])
-            if destination:
-                packet = current.packet_build(args[2], "Normal packet", args[3])
-                if packet:
-                    current.send_packet(packet)
-                else:
-                    print("Unable to build packet")
-
-    elif args[0] == "receive":
-        if len(args) > 1:
-            print("Invalid command")
         else:
-            current.receive_packet()
-
-
-    elif args[0] == "spoof":
-        if not isinstance(current, AttackerDevice):
             print("Invalid command")
-
-        else:
-            packet = current.spoofed_packet_build(args[1], args[2],
-                test_lan.get_device_by_ip(args[2]), "Attacking you haha")
-            current.send_packet(packet)
-
-    else:
-        print("Invalid command")
