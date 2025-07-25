@@ -1,0 +1,26 @@
+version: '3'
+services:
+  victim:
+    build: ./victim
+    container_name: victim
+    networks:
+      labnet:
+        ipv4_address: 192.168.100.10
+
+  attacker:
+    build: ./attacker
+    container_name: attacker
+    privileged: true
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      labnet:
+        ipv4_address: 192.168.100.20
+
+networks:
+  labnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
